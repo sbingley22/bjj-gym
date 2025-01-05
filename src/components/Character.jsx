@@ -5,9 +5,10 @@ import { useAnimations } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
 import { MeshBasicMaterial, Color } from "three"
 
-const Character = ({ model="GiFem", anim, speedMultiplier=1 }) => {
+const Character = ({ model="GiGirl", anim, setAnim, speedMultiplier=1, alt=false }) => {
   const { scene, nodes, animations } = useSkinnedMeshClone(glb)
   const { mixer, actions } = useAnimations(animations, scene)
+  const lastAnim = useRef("Bjj Stance")
 
   // Initial Setup
   useEffect(()=>{
@@ -31,6 +32,59 @@ const Character = ({ model="GiFem", anim, speedMultiplier=1 }) => {
     }
 
   },[nodes, actions])
+
+  useEffect(()=>{
+    if (actions[anim]){
+      actions[lastAnim.current].fadeOut(0.1)
+      actions[anim].reset().fadeIn(0.1).play()
+      lastAnim.current = anim
+    }
+  }, [anim])
+
+  const toggleVisibility = (name, vis) => {
+    scene.traverse((object) => {
+      if (object.name === name) object.visible = vis
+    })
+  }
+
+  useEffect(()=>{
+    if (!alt) return
+    if (model==="GiGirl") {
+      toggleVisibility("GiGirlBottoms", false)
+    }
+    else if (model==="PunkFem") {
+      toggleVisibility("PunkFemPants", false)
+    }
+    else if (model==="FightGirl") {
+      toggleVisibility("FightGirlJacket", false)
+    }
+  }, [alt])
+
+   // Mixer Settings
+  useEffect(()=>{
+    if (!mixer) return
+
+    const oneShotAnims = ["Bjj Single Leg A", "Bjj Single Leg B"]
+    oneShotAnims.forEach(osa => {
+      if (!actions[osa]) {
+        // console.log("No such action: ", osa)
+        return
+      }
+      actions[osa].clampWhenFinished = true
+      actions[osa].repetitions = 1
+    })
+
+    mixer.addEventListener("finished", (e) => {
+      const action = e.action.getClip().name
+      // console.log(action)
+
+      setTimeout(()=>{
+        setAnim("Bjj Stance")
+      },1000)
+    })
+
+    return mixer.removeEventListener("finished")
+  }, [mixer, actions])
 
   return (
     <primitive object={scene} />
