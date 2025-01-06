@@ -5,25 +5,31 @@ import { useAnimations } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
 import { MeshBasicMaterial, Color } from "three"
 
-const Character = ({ model="GiGirl", anim, setAnim, speedMultiplier=1, alt=false }) => {
+const Character = ({ model="GiGirl", anim, setAnim, speedMultiplier=1, alt=false, shadeMode="flat" }) => {
   const { scene, nodes, animations } = useSkinnedMeshClone(glb)
   const { mixer, actions } = useAnimations(animations, scene)
   const lastAnim = useRef("Bjj Stance")
 
   // Initial Setup
   useEffect(()=>{
-    // console.log(nodes, actions)
+     //console.log(nodes, actions)
 
-    // Replace all materials with MeshBasicMaterial, preserving textures
-    scene.traverse((object) => {
+     // Replace all materials with MeshBasicMaterial, preserving textures
+     scene.traverse((object) => {
       if (object.isMesh || object.isSkinnedMesh) {
-        const originalMaterial = object.material;
-        object.material = new MeshBasicMaterial({
-          map: originalMaterial.map, // Use the texture map from the original material
-          color: originalMaterial.color, // Preserve the color if needed
-        });
+        if (shadeMode==="flat") {
+          const originalMaterial = object.material;
+          object.material = new MeshBasicMaterial({
+            map: originalMaterial.map, // Use the texture map from the original material
+            color: originalMaterial.color, // Preserve the color if neede
+            transparent: originalMaterial.transparent, // Preserve transparency
+            opacity: originalMaterial.opacity, // Preserve opacity
+            alphaTest: originalMaterial.alphaTest || 0,
+            blending: originalMaterial.blending || THREE.NormalBlending,
+          });
+        }
 
-        if (!object.name.includes(model)) object.visible = false
+        if (!object.name.includes(model) && !object.parent.name.includes(model)) object.visible = false
       }
     });
 
@@ -38,6 +44,8 @@ const Character = ({ model="GiGirl", anim, setAnim, speedMultiplier=1, alt=false
       actions[lastAnim.current].fadeOut(0.1)
       actions[anim].reset().fadeIn(0.1).play()
       lastAnim.current = anim
+
+      actions[anim].setEffectiveTimeScale(speedMultiplier)
     }
   }, [anim])
 
@@ -47,16 +55,32 @@ const Character = ({ model="GiGirl", anim, setAnim, speedMultiplier=1, alt=false
     })
   }
 
+  const changeMaterialCol = (name, r, g, b) => {
+    scene.traverse((object) => {
+      if (object.name === name) {
+        // Clone the material to avoid shared references
+        const newMaterial = object.material.clone();
+        newMaterial.color.setRGB(r, g, b);
+        object.material = newMaterial; // Update the object with the new material
+      }
+    })
+  }
+
   useEffect(()=>{
     if (!alt) return
     if (model==="GiGirl") {
-      toggleVisibility("GiGirlBottoms", false)
+      changeMaterialCol("GiGirlBottoms", 0.1, 0.1, 0.1)
+      changeMaterialCol("GiGirlTop", 0.1, 0.1, 0.1)
+      toggleVisibility("GiGirlHair", false)
+      toggleVisibility("FightGirlHair", true)
     }
     else if (model==="PunkFem") {
+      toggleVisibility("PunkFemJacket", false)
       toggleVisibility("PunkFemPants", false)
     }
     else if (model==="FightGirl") {
       toggleVisibility("FightGirlJacket", false)
+      toggleVisibility("FightGirlPants", false)
     }
   }, [alt])
 
