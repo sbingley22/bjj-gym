@@ -74,14 +74,14 @@ const Character = ({ model="GiGirl", anim, setAnim, speedMultiplier=1, alt=false
       toggleVisibility("GiGirlHair", false)
       toggleVisibility("FightGirlHair", true)
     }
-    else if (model==="PunkFem") {
-      toggleVisibility("PunkFemJacket", false)
-      toggleVisibility("PunkFemPants", false)
-    }
-    else if (model==="FightGirl") {
-      toggleVisibility("FightGirlJacket", false)
-      toggleVisibility("FightGirlPants", false)
-    }
+    //else if (model==="PunkFem") {
+    //  toggleVisibility("PunkFemJacket", false)
+    //  toggleVisibility("PunkFemPants", false)
+    //}
+    //else if (model==="FightGirl") {
+    //  toggleVisibility("FightGirlJacket", false)
+    //  toggleVisibility("FightGirlPants", false)
+    //}
   }, [alt])
 
    // Mixer Settings
