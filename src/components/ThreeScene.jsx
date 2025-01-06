@@ -38,15 +38,15 @@ const ThreeScene = () => {
         </button>
         <button
           className="px-1 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-          onClick={() => setAnimation("Bjj Double Leg")}
+          onClick={() => setAnimation("Bjj Snap Down")}
         >
-          Double Leg
+          Snap Down
         </button>
         <button
           className="px-1 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-          onClick={() => setAnimation("Bjj Armbar")}
+          onClick={() => setAnimation("Bjj Hip Throw")}
         >
-          Armbar
+          Hip Throw
         </button>
 
       </div>
