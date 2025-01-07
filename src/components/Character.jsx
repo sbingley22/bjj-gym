@@ -88,7 +88,7 @@ const Character = ({ model="GiGirl", anim, setAnim, speedMultiplier=1, alt=false
   useEffect(()=>{
     if (!mixer) return
 
-    const oneShotAnims = ["Bjj Single Leg A", "Bjj Single Leg B", "Bjj Snap Down A", "Bjj Snap Down B", "Bjj Hip Throw A", "Bjj Hip Throw B"]
+    const oneShotAnims = ["Bjj Single Leg A", "Bjj Single Leg B", "Bjj Snap Down A", "Bjj Snap Down B", "Bjj Hip Throw A", "Bjj Hip Throw B", "F Throw A 1", "F Throw B 1"]
     oneShotAnims.forEach(osa => {
       if (!actions[osa]) {
         // console.log("No such action: ", osa)

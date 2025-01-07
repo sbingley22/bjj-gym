@@ -18,6 +18,11 @@ const Arena = ({ shadeMode, animation, setAnimation, animationSpeed }) => {
     setAnim1(animation + " A");
     setAnim2(animation + " B");
 
+    if (animation === "F Throw") {
+      setAnim1("F Throw A 1")
+      setAnim2("F Throw B 1")
+    }
+
     setAnimation("")
   }, [animation])
   

@@ -48,6 +48,12 @@ const ThreeScene = () => {
         >
           Hip Throw
         </button>
+        <button
+          className="px-1 py-2 bg-yellow-500 text-white rounded hover:bg-red-600"
+          onClick={() => setAnimation("F Throw")}
+        >
+          Leg Sweep
+        </button>
 
       </div>
 
